@@ -1,25 +1,25 @@
 class Peraz < Formula
   desc "Compress video, images, GIFs, PDFs, and e-books from the terminal"
   homepage "https://github.com/arsyadcc/peraz"
-  version "0.1.0-alpha.3"
+  version "0.1.0-alpha.4"
   if OS.mac?
     if Hardware::CPU.arm?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.3/peraz-aarch64-apple-darwin.tar.xz"
-      sha256 "afc8e29bc6a4819b4794a223997590f9d1078c1346e64962b6c2aeea8a931acd"
+      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.4/peraz-aarch64-apple-darwin.tar.xz"
+      sha256 "a156dccf7ac86a16ca68f6aacfb87c5048d4321336d86f79ceef6a60026eb588"
     end
     if Hardware::CPU.intel?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.3/peraz-x86_64-apple-darwin.tar.xz"
-      sha256 "bc1a42155318eeecf1544945a9ef64a72d14988d426ad76bc822c8649ef06d4d"
+      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.4/peraz-x86_64-apple-darwin.tar.xz"
+      sha256 "7829c60224614636a6e2cd32a2a450700aef2bf7bd38fa4a23501fe7caf6dc11"
     end
   end
   if OS.linux?
     if Hardware::CPU.arm?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.3/peraz-aarch64-unknown-linux-gnu.tar.xz"
-      sha256 "9dc7618ac1d96ae5512bad30a57166790306e4fd5504ae01b021e89c874aab54"
+      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.4/peraz-aarch64-unknown-linux-gnu.tar.xz"
+      sha256 "ffb3b239d2979c335235833f35a0e6ad822b9b261a31ab35132fecb66f84ec30"
     end
     if Hardware::CPU.intel?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.3/peraz-x86_64-unknown-linux-gnu.tar.xz"
-      sha256 "f3484d27b390fe0e9b581b24c937ceaf485ad61259e986a59268e2127d597f7e"
+      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.4/peraz-x86_64-unknown-linux-gnu.tar.xz"
+      sha256 "e114364710373d8b9d2c1e38ac1a430777290d5f84212d267c87c565c5c6b5ea"
     end
   end
   license "GPL-3.0-or-later"
@@ -63,8 +63,6 @@ class Peraz < Formula
     end
 
     install_binary_aliases!
-
-    generate_completions_from_executable(bin/"peraz", "completions")
 
     # Homebrew will automatically install these, so we don't need to do that
     doc_files = Dir["README.*", "readme.*", "LICENSE", "LICENSE.*", "CHANGELOG.*"]
