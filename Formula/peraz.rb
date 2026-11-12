@@ -1,25 +1,25 @@
 class Peraz < Formula
   desc "Compress video, images, GIFs, PDFs, and e-books from the terminal"
   homepage "https://github.com/arsyadcc/peraz"
-  version "0.1.0-alpha.2"
+  version "0.1.0-alpha.3"
   if OS.mac?
     if Hardware::CPU.arm?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.2/peraz-aarch64-apple-darwin.tar.xz"
-      sha256 "819d49e5e4d02bbe43dcd82953fd2ae48b3bccfe8892782f93b06dda9a594453"
+      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.3/peraz-aarch64-apple-darwin.tar.xz"
+      sha256 "afc8e29bc6a4819b4794a223997590f9d1078c1346e64962b6c2aeea8a931acd"
     end
     if Hardware::CPU.intel?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.2/peraz-x86_64-apple-darwin.tar.xz"
-      sha256 "96aa71cb15755dd27ccd1b87b2371561cb3d57a4c6409d9c50b32661807dd00f"
+      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.3/peraz-x86_64-apple-darwin.tar.xz"
+      sha256 "bc1a42155318eeecf1544945a9ef64a72d14988d426ad76bc822c8649ef06d4d"
     end
   end
   if OS.linux?
     if Hardware::CPU.arm?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.2/peraz-aarch64-unknown-linux-gnu.tar.xz"
-      sha256 "a1f3cc24f555059954651a75536dc5fc536d336130d39df8808ae412c04d70ac"
+      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.3/peraz-aarch64-unknown-linux-gnu.tar.xz"
+      sha256 "9dc7618ac1d96ae5512bad30a57166790306e4fd5504ae01b021e89c874aab54"
     end
     if Hardware::CPU.intel?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.2/peraz-x86_64-unknown-linux-gnu.tar.xz"
-      sha256 "f1595d48c4aecdb1b99f2ebcd4387da13981b6796ea7d1e515ade78be5e3271f"
+      url "https://github.com/arsyadcc/peraz/releases/download/v0.1.0-alpha.3/peraz-x86_64-unknown-linux-gnu.tar.xz"
+      sha256 "f3484d27b390fe0e9b581b24c937ceaf485ad61259e986a59268e2127d597f7e"
     end
   end
   license "GPL-3.0-or-later"
