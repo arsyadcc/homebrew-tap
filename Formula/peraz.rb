@@ -1,75 +1,35 @@
+# Homebrew formula that builds Peraz from source, for the tap's stable releases and for
+# homebrew-core. For stable releases, the Homebrew tap workflow fills in `url` and `sha256`.
 class Peraz < Formula
-  desc "Compress video, images, GIFs, PDFs, and e-books from the terminal"
+  desc "Compress videos, images, GIFs, PDFs, and EPUBs with results you can trust"
   homepage "https://github.com/arsyadcc/peraz"
-  version "0.7.0"
-  if OS.mac?
-    if Hardware::CPU.arm?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.7.0/peraz-aarch64-apple-darwin.tar.xz"
-      sha256 "7778c5fad713e957ebc3f50ef043896cf5be769a71458b77913ec31106f2dd97"
-    end
-    if Hardware::CPU.intel?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.7.0/peraz-x86_64-apple-darwin.tar.xz"
-      sha256 "3ee7caf70733a96b5c4d740fc3946fc71cb08a3d9eb7167cee09d3f1275cb9bd"
-    end
-  end
-  if OS.linux?
-    if Hardware::CPU.arm?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.7.0/peraz-aarch64-unknown-linux-gnu.tar.xz"
-      sha256 "c25f407f8e0b38a3829d07d5bb151811a7d9777916345bef1cd170463ecb2355"
-    end
-    if Hardware::CPU.intel?
-      url "https://github.com/arsyadcc/peraz/releases/download/v0.7.0/peraz-x86_64-unknown-linux-gnu.tar.xz"
-      sha256 "6494739a8fd38a28e1257407130be17cafbbfb49bdbd55ae3fea8a8a5aa1ace9"
-    end
-  end
+  url "https://github.com/arsyadcc/peraz/archive/refs/tags/v0.7.0.tar.gz"
+  sha256 "16fc6a233bca0aa026924c441bdfba57f8f880f9f6df629278d9fe1caae3808a"
   license "GPL-3.0-or-later"
+  head "https://github.com/arsyadcc/peraz.git", branch: "main"
+
+  depends_on "pkgconf" => :build
+  depends_on "rust" => :build
   depends_on "ffmpeg"
+  depends_on "libdeflate"
 
-  BINARY_ALIASES = {
-    "aarch64-apple-darwin":      {},
-    "aarch64-unknown-linux-gnu": {},
-    "x86_64-apple-darwin":       {},
-    "x86_64-pc-windows-gnu":     {},
-    "x86_64-unknown-linux-gnu":  {},
-  }.freeze
-
-  def target_triple
-    cpu = Hardware::CPU.arm? ? "aarch64" : "x86_64"
-    os = OS.mac? ? "apple-darwin" : "unknown-linux-gnu"
-
-    "#{cpu}-#{os}"
-  end
-
-  def install_binary_aliases!
-    BINARY_ALIASES[target_triple.to_sym].each do |source, dests|
-      dests.each do |dest|
-        bin.install_symlink bin/source.to_s => dest
-      end
-    end
+  on_intel do
+    # The SIMD JPEG and AV1 code is assembled with nasm on x86_64 only.
+    depends_on "nasm" => :build
   end
 
   def install
-    if OS.mac? && Hardware::CPU.arm?
-      bin.install "peraz"
-    end
-    if OS.mac? && Hardware::CPU.intel?
-      bin.install "peraz"
-    end
-    if OS.linux? && Hardware::CPU.arm?
-      bin.install "peraz"
-    end
-    if OS.linux? && Hardware::CPU.intel?
-      bin.install "peraz"
-    end
+    system "cargo", "install", "--features", "simd,system-libs", *std_cargo_args(path: "crates/peraz")
+    generate_completions_from_executable(bin/"peraz", "completions")
+  end
 
-    install_binary_aliases!
+  test do
+    assert_match version.to_s, shell_output("#{bin}/peraz --version")
+    assert_match "ffmpeg", shell_output("#{bin}/peraz doctor")
 
-    # Homebrew will automatically install these, so we don't need to do that
-    doc_files = Dir["README.*", "readme.*", "LICENSE", "LICENSE.*", "CHANGELOG.*"]
-    leftover_contents = Dir["*"] - doc_files
-
-    # Install any leftover files in pkgshare; these are probably config or
-    # sample files.
-    pkgshare.install(*leftover_contents) unless leftover_contents.empty?
+    system formula_opt_bin("ffmpeg")/"ffmpeg", "-loglevel", "error", "-f", "lavfi",
+           "-i", "testsrc=size=320x240", "-frames:v", "1", testpath/"in.png"
+    system bin/"peraz", "compress", "--format", "jpeg", "--output", testpath/"out.jpg", testpath/"in.png"
+    assert_equal "\xFF\xD8".b, (testpath/"out.jpg").binread(2)
   end
 end
